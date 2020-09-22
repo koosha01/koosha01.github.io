@@ -90,6 +90,7 @@ A bit of knowledge about both would be nice.
     So no general BOF or EOF.
     
 2. PNG:
+	
 	It starts with this 8-byte signature:
 	   
 		89 50 4e 47 0d 0a 1a 0a
