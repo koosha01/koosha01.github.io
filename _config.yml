@@ -29,9 +29,10 @@ github_username:  jekyll
 
 timezone: Asia/Tehran
 exclude: [_posts/*backup]
+author: Koosha
 
 # Build settings
-theme: jekyll-theme-hacker
+theme: jekyll-theme-cayman
 plugins:
   - jekyll-feed
 
