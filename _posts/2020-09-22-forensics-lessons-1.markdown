@@ -18,7 +18,7 @@ The first lesson I learned here is studying enough about the present protocols.
 A major time of mine was wasted because of the knowledge I was missing about some http request header.
 
 So my advise here is to know everything needed for the protocol to be able to analyze the tshark/wireshark output completely.  
-Don't dig too deep to get into things that are not related to the challenge, or too low not being able to understand what's going on.
+Don't dig too deep to get into things that are not related to the challenge, or too shallow not being able to understand what's going on.
     
 The Wireshark display filter reference is so helpful for digging into the connections: https://www.wireshark.org/docs/dfref/
 
