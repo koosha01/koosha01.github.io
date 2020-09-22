@@ -96,13 +96,15 @@ A bit of knowledge about both would be nice.
 		89 50 4e 47 0d 0a 1a 0a
 		
 	So after the header there comes a series of chunks. Chunks are divided into two sets, critical and ancillary.  
-	A brief explanation of them is as so:
+	Brief explanation of the main chunks:
 	
 	1. IHDR: First chunk, contains basic information about the image like width, height, color type and ... .
 	
 	2. IDAT: Contains the actual image data coming from the compression algorithm.
 	
 	3. IEND: Marks the end of the file.         
+
+	Depending on the image there could be much more, you can look them up online.
 
 <br/><br/>
 So that was it! Hope you learned a thing or two ;)
