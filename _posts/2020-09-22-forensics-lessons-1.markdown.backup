@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Forensics Lessons 1"
+title:  "Forensics Lessons"
 tags: forensics ctf
 exerpt_seperator: <!--more-->
 ---
@@ -31,17 +31,17 @@ The [Wireshark display filter reference](https://www.wireshark.org/docs/dfref/) 
 Tools play a big role in CTF.  
 Here are some common tools I used during the challenge:
 
-1. strings: Collecting human readable characters from the file.
+1. strings: Collects human readable characters from the file.
 
-2. file: Recognizing the file format.
+2. file: Recognizes the file format.
 
-3. binwalk: Walking through a binary to find embedded files according to magic numbers.
+3. binwalk: Walks through a binary to find embedded files according to magic numbers.
 
-4. hexdump: Dumping hex output of the file.
+4. hexdump: Dumps hex output of the file.
 
 5. python: As the magical scripting language! 
 
-6. xxd: Converting a hexdump to binary and vice versa.
+6. xxd: Converts a hexdump to binary and vice versa.
 
 Note: Python is a great help in CTFs. A good scripting language is always needed, empowering you to do all kinds of computations and inspections, from deciphering to packet analyzing. 
 
