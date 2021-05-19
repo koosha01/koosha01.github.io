@@ -4,68 +4,71 @@ title:  "Forensics Lessons 1"
 tags: forensics ctf
 exerpt_seperator: <!--more-->
 ---
-Recently I've been engaging with some forensics challenges. Honestly this was my first encounter with this type of challenges in the CTF style format.
+Recently I've been engaging with some forensics challenges. Honestly this was my first encounter with this category in [CTF](https://en.wikipedia.org/wiki/Wargame_(hacking)).
   
-I've discovered a lot of things during the progress of solving and learned a lesson or two.  
-So I hope sharing them would be useful for you. Enjoy :)
+I've discovered a lot during the progress of solving and learned a lesson or two.  
+So I hope sharing them would be useful for you as well. Enjoy :)
 
 ## Network
-<hr>  
-In this category I'm talking about the case you're given a  pcap file to analyze the commutations between different sides present in the network.  
+--- 
+By Network I mean the case you're given a pcap file to analyze the commutations between different parties present in the network.  
 I used *tshark* as the tool for my analysis.
 
-The first lesson I learned here is studying enough about the present protocols.  
-A major time of mine was wasted because of the knowledge I was missing about some http request header.
+The first lesson I learned here was studying enough about the **present protocols**.  
+In my case there were two sides, one sending http packets to another, transferring a *PNG* file. The catch is, the order was wrong. So my job was to sort the packets in the right order, and then putting them together.  
+A major time of mine wasted because of the knowledge I was missing about some http request header, so I couldn't sort the packets properly and got stock for a good deal of time.
 
-So my advise here is to know everything needed for the protocol to be able to analyze the tshark/wireshark output completely.  
-Don't dig too deep to get into things that are not related to the challenge, or too low not being able to understand what's going on.
+My advise here is to know everything needed about the protocol so you can analyze the tshark/wireshark output well.  
+Don't dig too deep, getting into things not related to the challenge, or too shallow not being able to understand what's going on.
     
-The Wireshark display filter reference is so helpful for digging into the connections: https://www.wireshark.org/docs/dfref/
+The [Wireshark display filter reference](https://www.wireshark.org/docs/dfref/) is so helpful to set the tshark/wireshark parameters right and get a nice analysis done.
+
 
 ## File System
-<hr>
+---
 - **Tools**
 
 Tools play a big role in CTF.  
-Here are the common tools which I used during the challenge:
+Here are some common tools I used during the challenge:
 
-1. strings: collecting human readable characters from the file
+1. strings: Collecting human readable characters from the file.
 
-2. file: recognizing file format
+2. file: Recognizing the file format.
 
-3. binwalk: walking through a binary to find embedded files according to magic numbers
+3. binwalk: Walking through a binary to find embedded files according to magic numbers.
 
-4. hexdump: dumping hex output of the file
+4. hexdump: Dumping hex output of the file.
 
-5. python: as the scripting language for needed scripts 
+5. python: As the magical scripting language! 
 
-6. xxd: converting a hexdump to binary and vice versa  
+6. xxd: Converting a hexdump to binary and vice versa.
+
+Note: Python is a great help in CTFs. A good scripting language is always needed, empowering you to do all kinds of computations and inspections, from deciphering to packet analyzing. 
 
 
 - **File Header**
 
-Different files have different file signatures.  
-Usually the first bytes of the file are considered as so. They're also called magic numbers.  
+Different files have different file signatures. This way they can be identified as what they are.  
+Usually the first bytes of the file are considered as such. They're also called magic numbers.  
 For example PNG files start with this sequence of hex values:  
 	
 	89 50 4E 47 0D 0A 1A 0A  
-
-This way files can be identified as what they are.
   
 A very significant point of view about files are these magic numbers. After using ordinary tools for collecting info, pay attention to the file's header and footer.  
-Maybe it's corrupted and you should fix it this way.
+Maybe it's corrupted and you should fix it this way. In some cases (including mine!) they miss a few characters among the sequence.
 
 - **Zlib**
 
 Zlib is a data compression library used in various application software.  
-During the progress of analyzing files I used to run the binwalk command on them, in several occasions I faced this message:
+During the progress of analyzing binaries I used to run the binwalk command on them, in several occasions I faced this message:
 
 > Zlib compressed data
 
-First I thought maybe it's a compressed file embedded in the main file. But I failed decompressing it using various tools around zlib compression library.  
-At last I found out the main file was a PNG image. It made sense cause PNG uses Zlib as the means of compression.
+First I thought maybe it's a compressed file embedded in the main binary. But I failed decompressing it using various tools around zlib compression library.  
+At last I found out the binary was a PNG image, using Zlib library as the means of compression. It makes sense cause PNG has a compression process among other tasks.
 
-So the lesson here is to look up for the software which uses a particular library you found in the main file using binwalk.
+So the lesson here is when you execute binwalk and find a library, look up for various software which make use of that library. In our case the PNG file format which includes Zlib for data compression.
+
 
 - **Zip and PNG Structures**
 
@@ -77,33 +80,52 @@ A bit of knowledge about both would be nice.
     A Zip file basically consists of two main parts:
     
     + Central Directory: Keeps track of all the files in the archive.
-    + File Entries: Files in the archive, contain local file headers having info about the file.
+    + File Entries: Files in the archive, contain local file headers having info about the files.
     
     Central directory keeps records of the files inside the archive. It has different info such as file name, metadata, an offset which points to the actual data in the archive and etc.
     
-    This way the listing of the archive would be done fast and easily. Central directory is also responsible for the updates which will be made on the archive, including deleting a file, adding a new one and so on. Meaning that scanning for local file headers through the archive would be invalid.
+    This way the listing of the archive would be done fast and easily. Central directory is also responsible for the updates which will be made on the archive, including deleting a file, adding a new one and so on. So scanning for local file headers through the archive would be invalid act.
     
-    A true Zip file identification is by the presence of *end of the central directory* which is displayed by these set of bit:  
+    A true Zip file identification is done by presence of *end of the central directory* which is displayed by these set of bits:  
     
         50 4b 05 06
     
-    So no general BOF or EOF.
+    So no general BOF nor EOF.
     
 2. PNG:
-	It starts with this 8-byte signature:
+	
+	It starts with an 8-byte signature:
 	   
 		89 50 4e 47 0d 0a 1a 0a
 		
-	So after the header there comes a series of chunks. Chunks are divided into two sets, critical and ancillary.  
-	A brief explanation of them is as so:
+	After the header there comes a series of chunks.  
+	What is a chunk you may ask? It's simply a part (chunk) of the file representing a bunch of info. Chunks are divided into two sets, critical and ancillary.  
+	Brief explanation of the main chunks:
 	
 	1. IHDR: First chunk, contains basic information about the image like width, height, color type and ... .
 	
 	2. IDAT: Contains the actual image data coming from the compression algorithm.
 	
-	3. IEND: Marks the end of the file.         
+	3. IEND: Marks the end of the file.
+	
+	Some ancillary chunks:
+	
+	1. 	tIME: Stores the last time the file was changed.
+	2. 	tEXt: Can store text.
+	<br>.<br>.<br>.
+	         
+
+	Depending on the image there could be much more, you can look them up [online](https://en.wikipedia.org/wiki/Portable_Network_Graphics#%22Chunks%22_within_the_file).
+	
+	Some basic tools regarding PNG format file:
+	1. 	pngtools: It's an Ubuntu package which includes a series of tools for inspecting PNG images, such as: pnginfo, pngchunks and ... .
+	2. 	pngcheck: Checks for file integrity and displays some info.
+	3. 	pngmeta: Extracts meta data out of the image.
+
+	If the task is about extracting some hidden information out of the image, there are much more advanced tools you can find online which lie down in [steganography](https://en.wikipedia.org/wiki/Steganography) category.
+
 <br/><br/>
-So that was it! Hope you learned a thing or two ;)
+So that was it! Hope you learned a piece ;)
 
 
       
