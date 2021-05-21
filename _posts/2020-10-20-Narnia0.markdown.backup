@@ -52,7 +52,7 @@ So our desired string should be something like this:
 Keep in mind that deadbeef is actually a hex value.  
 
 We use **printf** for writing our string in proper format and **cat** for keeping shell open.  
-Another trick here is to use a *subshell*. So the desired shell won't get closed. Using parentheses around the command we can do so:
+Another trick here is to use a *subshell*. So the desired shell won't get closed. Using parentheses around the command we can do so.
 
 	(printf "12345678901234567890\xef\xbe\xad\xde"; cat - ) | ./narnia0
 

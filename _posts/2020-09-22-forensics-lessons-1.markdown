@@ -2,12 +2,13 @@
 layout: post
 title:  "Forensics Lessons"
 tags: forensics ctf
-exerpt_seperator: <!--more-->
+excerpt_separator: <!--more-->
 ---
 Recently I've been engaging with some forensics challenges. Honestly this was my first encounter with this category in [CTF](https://en.wikipedia.org/wiki/Wargame_(hacking)).
   
 I've discovered a lot during the progress of solving and learned a lesson or two.  
 So I hope sharing them would be useful for you as well. Enjoy :)
+<!--more-->
 
 ## Network
 --- 
@@ -26,7 +27,7 @@ The [Wireshark display filter reference](https://www.wireshark.org/docs/dfref/) 
 
 ## File System
 ---
-- **Tools**
+### Tools
 
 Tools play a big role in CTF.  
 Here are some common tools I used during the challenge:
@@ -46,7 +47,7 @@ Here are some common tools I used during the challenge:
 Note: Python is a great help in CTFs. A good scripting language is always needed, empowering you to do all kinds of computations and inspections, from deciphering to packet analyzing. 
 
 
-- **File Header**
+### File Header
 
 Different files have different file signatures. This way they can be identified as what they are.  
 Usually the first bytes of the file are considered as such. They're also called magic numbers.  
@@ -57,7 +58,7 @@ For example PNG files start with this sequence of hex values:
 A very significant point of view about files are these magic numbers. After using ordinary tools for collecting info, pay attention to the file's header and footer.  
 Maybe it's corrupted and you should fix it this way. In some cases (including mine!) they miss a few characters among the sequence.
 
-- **Zlib**
+### Zlib
 
 Zlib is a data compression library used in various application software.  
 During the progress of analyzing binaries I used to run the binwalk command on them, in several occasions I faced this message:
@@ -70,12 +71,12 @@ At last I found out the binary was a PNG image, using Zlib library as the means 
 So the lesson here is when you execute binwalk and find a library, look up for various software which make use of that library. In our case the PNG file format which includes Zlib for data compression.
 
 
-- **Zip and PNG Structures**
+### Zip and PNG Structures
 
 These are two important file types and the ones I've been working with in the challenge.  
 A bit of knowledge about both would be nice.
 
-1. Zip:
+- **Zip:**
   
     A Zip file basically consists of two main parts:
     
@@ -92,7 +93,7 @@ A bit of knowledge about both would be nice.
     
     So no general BOF nor EOF.
     
-2. PNG:
+- **PNG:**
 	
 	It starts with an 8-byte signature:
 	   

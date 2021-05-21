@@ -2,7 +2,7 @@
 layout: post
 title:  "Narnia0"
 tags: binary re narnia wargames
-exerpt_seperator: <!--more-->
+excerpt_separator: <!--more-->
 ---
 In these series of posts I'm going to share my write-ups for the Narnia challenge of [WarGames](https://overthewire.org/wargames/).  
 Enjoy! :) 
