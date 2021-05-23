@@ -330,10 +330,10 @@ The result can be seen by the flags set in the EFLAG register.
 
 1. JMP:
 	- Can be compared with GOTO in C.
-	- syntax: JMP Label.
+	- syntax: `JMP Label`.
 2. Call:
 	- Like calling a function in C.
-	- syntax: Call Label.
+	- syntax: `Call Label`.
 	- Call is associated with RET instruction.
 
 **Conditional Branching:**
@@ -365,7 +365,9 @@ The result can be seen by the flags set in the EFLAG register.
 
 - Defining:  
 	
-	`.type MyFunction, @function`  
+	```
+	.type MyFunction, @function
+	```
 	(Which MyFunction is the desired label for the function.)
 
 - Usage:
@@ -383,10 +385,13 @@ The result can be seen by the flags set in the EFLAG register.
 ---
 
 - Pictures for Memory layout:
-
+	
+	```
 	http://dmitrysoshnikov.com/compilers/writing-a-memory-allocator  
-	http://tetru.blogspot.com/2014/09/the-memory-layout-of-computer-		program.html
+	http://tetru.blogspot.com/2014/09/the-memory-layout-of-computer-program.html
+	```
 
 - Pictures for registers:
-
+	```
 	https://wiki.osdev.org/CPU_Registers_x86-64
+	```
