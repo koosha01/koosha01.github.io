@@ -7,8 +7,6 @@ excerpt_separator: <!--more-->
 In this post I'm going to share my write-up for the first level of Narnia series of challenges from [WarGames](https://overthewire.org/wargames/). This post is not **just** a CTF write-up, but an excuse to learn about computers and security.  A base knowledge of Linux operating system, programming (Especially in C) and Assembly Language is needed. Enjoy! :) 
 <!--more-->
 
----
-
 All files related to the challenges are listed in */narnia/* directory. One *narniaX.c* for source code and one *narniaX* as the compiled executable version, for each level of number *X*.  
 First we look at the related concepts an then analyze the source line by line.
 
@@ -195,7 +193,7 @@ simply sets the values of EUID and RUID of the calling process to it's Effective
 
 So how does little-endian work and benefit us?  
 In order to store *0xdeadbeef* in a memory location, we have to put it in this form: *0xefbeadde*.  
-Why? Because this way *0xde* will go into the first byte, *0xad* the  second, *0xbe* third and *0xef* in the last byte. This happens because the least significant byte is stored in the leas significant address.
+Why? Because this way *0xde* will go into the first byte, *0xad* the  second, *0xbe* third and *0xef* in the last byte. This happens because our processor stores the least significant byte is stored in the leas significant address.
 
 In conclusion our desired string would be looking like this:  
 
