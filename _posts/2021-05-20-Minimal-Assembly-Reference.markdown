@@ -4,7 +4,7 @@ title:  "Minimal Assembly Reference"
 tags: assembly binary 
 excerpt_separator: <!--more-->
 ---
-Assembly language is without doubt one the most important topics in binary reverse engineering and exploitation. 
+Assembly language is without doubt one of the most important topics in binary reverse engineering and exploitation. 
 
 Of course Assembly is huge and there are lots of great resources to learn it, from scratch and in depth. This post however represents an abstract of what I learned during an assembly course. You can find it [here](http://www.securitytube.net/groups?operation=view&groupId=5) or [here](https://www.youtube.com/playlist?list=PLyqno_bgl3e-zLBZGdi_zsPQYPQUlZYe4). It's more appropriate in case you want to look up some instructions and read binary. Hope it comes useful :)
 <!--more-->
