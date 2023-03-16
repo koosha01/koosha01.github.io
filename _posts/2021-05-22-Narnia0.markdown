@@ -216,4 +216,4 @@ This is the magical command for getting the shell:
 - We use **printf** to wrap our string up in the proper format. We don't want to give *deadbeef* as a string, but as a hex value, a binary. 
 - After that we run **cat** with a dash mark. So when the shell (system("/bin/sh")) opens it will constantly get input and deliver to the new born shell.
 
-Congrats! You got the shell, now you just need to use cat for viewing the narnia1 user password from **/narnia_pass/** directory.
+Congrats! You got the shell, now you just need to use cat for viewing the narnia1 user password from **/etc/narnia_pass/** directory.

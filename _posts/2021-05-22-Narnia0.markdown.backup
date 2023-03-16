@@ -201,7 +201,7 @@ In conclusion our desired string would be looking like this:
 12345678901234567890efbeadde
 ```
 
-The first 20 bytes are filled with whatever we want, and the 4 remaining ones with 0xdeadbeef in the little-endian compatible format.
+The first 20 bytes filled with whatever we want, and the 4 remaining ones with 0xdeadbeef in the little-endian compatible format.
 
 ### Subshell
 
