@@ -6,7 +6,8 @@ excerpt_separator: <!--more-->
 ---
 Assembly language is without doubt one of the most important topics in binary reverse engineering and exploitation. 
 
-Of course Assembly is huge and there are lots of great resources to learn from. This post however represents an abstract of what I've learned during an assembly course. You can find it [here](http://www.securitytube.net/groups?operation=view&groupId=5) or [here](https://www.youtube.com/playlist?list=PLyqno_bgl3e-zLBZGdi_zsPQYPQUlZYe4). It's more appropriate in case you want to look up some instructions and read binary. Hope it comes useful :)
+Of course Assembly is huge and there are lots of great resources to learn from. This post however represents an abstract of what I've learned during an assembly course. You can find it [here](http://www.securitytube.net/groups?operation=view&groupId=5) or [here](https://www.youtube.com/playlist?list=PLyqno_bgl3e-zLBZGdi_zsPQYPQUlZYe4). It's more appropriate in case you want to look up instructions and read binary.  
+Hope it comes useful :)
 <!--more-->
 ## Some words on Memory
 ---
@@ -55,7 +56,7 @@ GDB (short for Gnu Debugger) is a powerful debugger you could use for your binar
 |Command, shorter version [parameters]|Explanation|
 |---|---|
 |list, l [line number or function name]|Views source code (if available).|
-|run, r [program arguments]|Starts the program|
+|run, r [program arguments]|Starts the program.|
 |disassemble, disas [function name, address]|Disassembles a specified section of memory. <br> With */s* modifier shows source code (if available) and with */r*, the hex instructions.|
 |break, b [function name, memory address or ...]|Sets a breakpoint at the specified location.|
 |continue, c|Continues program being debugged after a breakpoint.|
@@ -170,20 +171,7 @@ Different types of *mov* instructions and their examples:
 
 2. movw: moves a 16 bit value.  
 
-	```
-	movw %ax, %bx.data:
-		HelloWorld:
-		.ascii “Hello world!!”
-		
-		Int32:
-		.int 2
-		
-		Float:	
-		.float 10.23
-	
-	.bss
-		.comm LargeBuffer, 1000
-	```
+	`movw %ax, %bx`
 
 3. movb: moves a 8 bit value
 	
@@ -191,7 +179,7 @@ Different types of *mov* instructions and their examples:
 
 **Moving Types:**
 
-There are different types of moving data based on source and destination. Here we look at each with an example:
+There are different types of data transition based on the source and destination. Here we look at each with an example:
 
 1. Between Registers:
 
@@ -221,7 +209,7 @@ There are different types of moving data based on source and destination. Here w
 5. Moving Data into an Indexed Memory Location:
 
 	Here's the syntax to access a place in the indexed memory location:  
-	BaseAddress(Offset, Index, Size)  
+	**BaseAddress(Offset, Index, Size)**.  
 	See the example bellow which moves 4 bytes into the third place of the array(I.e 30):
 	
 	```
@@ -234,27 +222,27 @@ There are different types of moving data based on source and destination. Here w
 
 Two ways of indirect addressing:
  
-1. Placing *$* before a label name = Getting the memory address of the variable.
+1. Placing *$* before a label name => Getting the memory address of the variable.
 
 	Example:  
-	Moving the value in *location* variable to register EDI.
+	Moving the value form *location* variable to register EDI.
 
 	`movl $location, %edi`
 
-2. Putting parentheses around a register = Pointing to the address which the register contains.
+2. Putting parentheses around a register => Pointing to the address which the register contains.
 
 	Example:  
-	Moving value 9 in the memory location pointed by EDI register.
+	Moving the integer 9 to the memory location pointed by EDI register.
 
 	`movl $9, (%edi)`
 
 	Example:  
-	Moving value 9 in the memory location pointed by EDI + 4.
+	Moving the integer 9 to the memory location pointed by EDI + 4.
 
 	`movl $9, 4(%edi)`
 
 	Example:  
-	Moving value 9 in the memory location pointed by EDI – 2.
+	Moving integer 9 to the memory location pointed by EDI – 2.
 	
 	`movl $9, -2(%edi)`
 	
