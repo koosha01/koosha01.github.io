@@ -4,11 +4,11 @@ title:  "Narnia0"
 tags: binary ctf rce reverse-engineering narnia wargames
 excerpt_separator: <!--more-->
 ---
-In this post I'm going to share my write-up for the first level of Narnia series of challenges from [WarGames](https://overthewire.org/wargames/). This post is not **just** a CTF write-up, but an excuse to learn about computers and security.  A base knowledge of Linux operating system, programming (Especially in C) and Assembly Language is needed. Enjoy! :) 
+In this post I'm going to share my write-up for the first level of Narnia series of challenges from [OvertheWire](https://overthewire.org/wargames/). This post is not **just** a CTF write-up, but an excuse to learn about computers and security.  A base knowledge of Linux operating system, programming (Especially in C) and Assembly Language is needed. Enjoy! :) 
 <!--more-->
 
-All files related to the challenges are listed in */narnia/* directory. One *narniaX.c* for source code and one *narniaX* as the compiled executable version, for each level of number *X*.  
-First we look at the related concepts an then analyze the source line by line.
+All files related to the challenges are listed in */narnia/* directory on the server. One *narniaX.c* for source code and one *narniaX* as the compiled executable version, for each level of number *X*.  
+First we look at the related concepts and then analyze the source line by line.
 
 ## Initial Inspection
 ---
@@ -22,21 +22,21 @@ $>file narnia0
 narnia0: setuid ELF 32-bit LSB executable, ...
 ```
 
-From here we learn the it is a 32-bit executable Linux binary. So far a lot if info!
+From above we learn that it is a 32-bit executable Linux binary. So far a lot if info!
 
 ```
 $>ls -l narnia0
 -r-sr-x--- 1 narnia1 narnia0 7456 Aug 26  2019 narnia0
 ```
 
-*ls* shows that we (as a member of group narnia0) have read and execute access to the binary. So we can not change it!  
+*ls* shows that we (as a member of group narnia0) have reading and execution access to the binary. So we can not change it!  
 Also a *setuid* bit is set, meaning when we execute narnia0 it will be executed with *narnia1* user access. Important detail!
 
 ## CCC (C Calling Convention)
 ---
 
 In order to understand the assembly code of the program we need to familiarize ourselves with the concept of C calling convention.  
-What it means? For the subroutines in the program to be executed there is a convention to be followed, a set of rules.  
+What does it mean? For the subroutines in the program to be executed there is a convention to be followed, a set of rules.  
 It's divided into two sets. Rules which the caller should obey them and rules which the subroutine itself (I.e calle) must follow.    
 We look at them nice and brief:
 
@@ -49,14 +49,14 @@ We look at them nice and brief:
 
 ### Caller's Convention
 
-In each convention there are two fazes which are mirror of each other. One undoing what the other did:
+In each convention there are two fazes which are mirrors to each other. One undoing what the other did:
 
 - **Prologue**
 
 |Stage|What to do?|Explanation|
 |:---:|:---:|---|
-|1|Save the registers!|Save the contents of registers  EAX, ECX, EDX **If** you want to preserve them. You can restore them after the function call. Now push the on the stack!|
-|2|Pass the parameters!|Push the parameters to the subroutine in the reversed order (stack grows down.).|
+|1|Save the registers!|Save the contents of registers  EAX, ECX, EDX **If** you want to preserve them. You can restore them after the function call. Now push them on the stack!|
+|2|Pass the parameters!|Push the parameters of the subroutine onto the stack, in the reversed order (stack grows down).|
 |3|Call!|Call the subroutine using *call* instruction. This will place the **return address** on top of the parameters on the stack.| 
 
 <br>
@@ -64,7 +64,7 @@ In each convention there are two fazes which are mirror of each other. One undoi
 
 |Stage|What to do?|Explanation|
 |:---:|:---:|---|
-|1|Remove the parameters|Remove the parameters from the stack, restoring it to the previous state. This is done by adding the proper value (Number of bytes used by the parameters)to the ESP.  <br> E.g If they were three integers (4 bytes each): `addl $12, %esp`|
+|1|Remove the parameters|Remove the parameters from the stack, restoring it to the previous state. This is done by adding the proper value (Number of bytes used by the parameters)to the ESP.  <br> E.g: If they were three integers (4 bytes each): `addl $12, %esp`|
 |2|Check the EAX!|The return value of the subroutine can be found in the EAX register.|
 |3|Restore the Regs!|Restore the registers by popping them off the stack.|
 
@@ -99,7 +99,7 @@ Wrapping it up, we have two important references:
 - EBP: Having the address of the old ESP, points to the old EBP.
 - ESP: Points to the top of the stack.
 
-This was a summary, if you like to read with more details and examples, here's the [full text](https://aaronbloomfield.github.io/pdr/book/x86-32bit-ccc-chapter.pdf).
+This was a summary. if you would like to read in more details and examples, here's the [full text](https://aaronbloomfield.github.io/pdr/book/x86-32bit-ccc-chapter.pdf).
 
 ## Buffer Overflow
 ---
@@ -146,7 +146,7 @@ Let's look up the lines each:
 
 1. First it defines two variables. val which has a hex value and buf which is an array of characters with a length of 20.
 2. Prints out messages. Asks us nicely to change the value of *val*.
-3. Reads input. The *%s* character means it's reading an string, and *24* indicates the input's length. It'll put the string in variable buf. You can see the full instructions for *scanf* [here](https://www.tutorialspoint.com/c_standard_library/c_function_scanf.htm).
+3. Reads input. The *%s* character means it's reading a string, and *24* indicates the input's length. It'll put the string in variable buf. You can see the full instructions for *scanf* [here](https://www.tutorialspoint.com/c_standard_library/c_function_scanf.htm).
 4. Prints out messages. Shows the contents of val and buf.
 5. Checks if we did the change, if so delivers a shell with narnia1 user access.
 6. If not shows a message and exits.
@@ -154,9 +154,9 @@ Let's look up the lines each:
 
 ### Exploiting
 
-The program asks us to enter a string with 24 bytes length.  
+The program asks us to enter a string of 24 bytes length.  
 
-As we saw in calling convention when the *main* function executes, it will allocate some space in the stack for the local variables. Here val and buf.  
+As we saw in calling convention, when the *main* function executes, it will allocate some space in the stack for the local variables. Here val and buf.  
 The point is, buf lies bellow var in the stack. Meaning the address of the buf variable is lower than val. It's been specified that buf is a 20 bytes size string, but scanf is putting 24 bytes in it, so the remaining 4 bytes will be written into val.  
 All we have to do is to choose the first 20 bytes as whatever as we want and the next four bytes: 0xdeadbeef.  
 This vulnerability, which lets us write to some variable with on overflow of a buffer, is called:  
@@ -165,35 +165,35 @@ This vulnerability, which lets us write to some variable with on overflow of a b
 ### UID
 
 Each user in Unix is associated with a unique number called User ID.  
-There are three important types of UID defined for process, let's have a look at them:
+There are three important types of UID defined for a process, let's have a look at them:
 
 - Real User ID: For a process it's simply the UID of the user who has started it.
 
 - Effective User ID: Normally it's same as Real UID, but can be changed to enable a non-privileged user to access what can be accessed by the privileged user.  
 Take a look at *passwd*:  
 `-rwsr-xr-x 1 root root 68208 May 28  2020 /usr/bin/passwd`  
-The *setuid* flag is set, so when a normal user runs the binary the EUID becomes 0 (root's UID) and RUID remains the same.
+The *setuid* flag is set. So when a normal user runs the binary, the EUID becomes 0 (root's UID) and RUID remains the same.
 
 - Saved User ID: When a process is running with a privileged access, meaning EUID is changed, and it want's to do some under-privileged job, the value of EUID is saved to saved user id (suid) and sets the EUID to the non-privileged UID.
 
-So this line in the code:
+Consider again this line in the code:
 ```
 setreuid(geteuid(),geteuid());
 ```
 
-simply sets the values of EUID and RUID of the calling process to it's Effective User ID, so the process will have the **narnia1** user access.
+It'll simply set the values of EUID and RUID of the calling process to it's Effective User ID, so the process will have the **narnia1** user access.
 
 ### Endianness
 
-- Endianness is the order to store a sequence of bytes in computer memory. It is also used in networks for transmitting bytes over a channel.
+- Endianness is the order to store a sequence of bytes in the computer memory. It is also used in networks for transmitting bytes over a channel.
 
-- We have big-endian and little-edian. In a big-endian system the most significant byte is stored in the smallest memory address and the least significant byte a the largest. Little-endian is reverse.  
+- There are two types: big-endian and little-edian. In a big-endian system the most significant byte is stored in the smallest memory address and the least significant byte a the largest. Little-endian is reverse.  
 
-- Big-endianness is mostly used in network protocols and little-endianness in processor architectures (x86, Arm and ...) wand their associated memory.
+- Big-endianness is mostly used in network protocols and little-endianness in processor architectures (x86, Arm and ...) and their associated memory.
 
 So how does little-endian work and benefit us?  
 In order to store *0xdeadbeef* in a memory location, we have to put it in this form: *0xefbeadde*.  
-Why? Because this way *0xde* will go into the first byte, *0xad* the  second, *0xbe* third and *0xef* in the last byte. This happens because our processor stores the least significant byte in the leas significant address, in the memory.
+Why? Because this way *0xde* will go into the first byte, *0xad* the  second, *0xbe* third and *0xef* in the last byte. This happens because our processor stores the least significant byte in the least significant address, in the memory.
 
 In conclusion our desired string would be looking like this:  
 
