@@ -12,14 +12,14 @@ So I hope sharing them would be useful for you as well. Enjoy :)
 
 ## Network
 --- 
-By Network I mean the case you're given a pcap file to analyze the commutations between different parties present in the network.  
+By "Network" I mean the case in which you're given a pcap file to analyze the commutations between different parties present in a network.  
 I used *tshark* as the tool for my analysis.
 
-The first lesson I learned here was studying enough about the **present protocols**.  
+The first lesson I learned here was to study enough about the **present protocols**.  
 In my case there were two sides, one sending http packets to another, transferring a *PNG* file. The catch is, the order was wrong. So my job was to sort the packets in the right order, and then putting them together.  
-A major time of mine wasted because of the knowledge I was missing about some http request header, so I couldn't sort the packets properly and got stock for a good deal of time.
+A major time of mine wasted because of the knowledge I was missing about some http request header, so I couldn't sort the packets properly and got stuck for a good deal of time.
 
-My advise here is to know everything needed about the protocol so you can analyze the tshark/wireshark output well.  
+My advise here is to absorb the necessary knowledge about the protocol, so you can analyze the tshark/wireshark output well.  
 Don't dig too deep, getting into things not related to the challenge, or too shallow not being able to understand what's going on.
     
 The [Wireshark display filter reference](https://www.wireshark.org/docs/dfref/) is so helpful to set the tshark/wireshark parameters right and get a nice analysis done.
