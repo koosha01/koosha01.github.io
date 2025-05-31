@@ -181,7 +181,6 @@ Consider again this line in the code:
 ```c
 setreuid(geteuid(),geteuid());
 ```
-{: .nolineno }
 
 It'll simply set the values of EUID and RUID of the calling process to it's Effective User ID, so the process will have the **narnia1** user access.
 
