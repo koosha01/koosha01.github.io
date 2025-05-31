@@ -3,15 +3,11 @@ layout: post
 title:  "Forensics Lessons"
 tags: forensics ctf
 excerpt_separator: <!--more-->
----
-Recently I've been engaging with some forensics challenges. Honestly this was my first encounter with this category in [CTF](https://en.wikipedia.org/wiki/Wargame_(hacking)).
-  
-I've discovered a lot during the progress of solving and learned a lesson or two.  
-So I hope sharing them would be useful for you as well. Enjoy :)
+--- 
+Recently I've been engaging with some forensics challenges. Honestly this was my first encounter with this category in [CTF](https://en.wikipedia.org/wiki/Wargame_(hacking)). I've discovered a lot during the progress of solving and learned a lesson or two. So I hope sharing them would be useful for you as well. Enjoy :)
 <!--more-->
 
 ## Network
---- 
 By "Network" I mean the case in which you're given a pcap file to analyze the commutations between different parties present in a network.  
 I used *tshark* as the tool for my analysis.
 
